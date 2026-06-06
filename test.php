@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tree;
 
-require_once(__DIR__ . "/vendor/autoload.php");
-require_once(__DIR__ . "/src/Helpers/Functions.php");
+require_once __DIR__ . '/vendor/autoload.php';
 
-use Tree\Runner;
+use Tree\Database\PdoFactory;
+use Tree\Renderer\HtmlTreeRenderer;
 
-addHtml();
+$pdo     = PdoFactory::create();
+$service = new TreeService(new TreeRepository($pdo, 'categories'));
 
-$result = Runner::run15();
-$result = Runner::run6();
+echo (new HtmlTreeRenderer(debug: true))->render($service->getForest());
